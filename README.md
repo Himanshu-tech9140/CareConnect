@@ -1,15 +1,103 @@
-# CareConnect Patient-Provider EHR
+# CareConnect
 
-CareConnect is a functional reference implementation of a patient-provider Electronic Health Record workspace. It combines an Angular clinical UI with a Java Spring Boot REST API, Spring Data JPA, and PostgreSQL-ready persistence. Accounts, patients, appointments, and clinical records are persisted through the API; no client-side fallback records are used.
+## Patient and Provider EHR Workspace
 
-## Stack
+CareConnect is a full-stack electronic health record (EHR) reference application for connecting patients, providers, and care teams in one secure workspace. It provides role-aware clinical workflows for authentication, patient records, appointments, encounters, orders, medications, staff administration, and audit visibility.
 
-- Angular 19 standalone components, strict TypeScript, Router, reactive-ready forms, and responsive CSS.
-- Java 21 / Spring Boot 3.4 / Spring Web / Spring Security / Spring Data JPA / Bean Validation.
-- PostgreSQL 16 for the canonical runtime, with Flyway schema migration `V1__create_careconnect_schema.sql`.
-- H2 `demo` profile for a dependency-light sandbox preview when Docker/PostgreSQL is unavailable.
+> **Important:** CareConnect is a demonstration and reference implementation. It is not certified for clinical use and does not make HIPAA, GDPR, SOC 2, medical-device, or other regulatory compliance claims. Never enter real protected health information (PHI).
 
-## Run the frontend in the sandbox
+## Highlights
+
+- Role-based workspaces for administrators, doctors, nurses, and patients
+- Patient registration and authenticated sign-in with JWT sessions
+- BCrypt password hashing and server-side authorization boundaries
+- Patient profiles, charts, encounters, medications, and clinical orders
+- Appointment scheduling with provider availability and overlap validation
+- Staff provisioning and account status management for administrators
+- Audit event tracking for security-sensitive operations
+- Angular responsive UI with a Spring Boot REST API
+- PostgreSQL-ready persistence with Flyway migrations
+- File-backed H2 demo profile for local development without Docker
+- Docker support for a single-container deployment
+
+## Technology Stack
+
+### Frontend
+
+- Angular 19
+- TypeScript with strict compiler settings
+- Angular Router and standalone components
+- Reactive forms and RxJS
+- Angular development server with `/api` proxying
+
+### Backend
+
+- Java 21
+- Spring Boot 3.4
+- Spring Web, Spring Security, Spring Data JPA, and Bean Validation
+- JWT bearer authentication
+- BCrypt password hashing
+- Flyway database migrations
+
+### Data and Delivery
+
+- PostgreSQL 16 for the canonical runtime
+- H2 for the local `demo` profile
+- Docker Compose for PostgreSQL development
+- Multi-stage Dockerfile for combined frontend and backend packaging
+
+## Architecture
+
+```text
+Browser
+  |
+  v
+Angular 19 frontend (:3000)
+  |  /api proxy in development
+  v
+Spring Boot REST API (:8080)
+  |
+  v
+PostgreSQL 16  |  H2 demo database
+```
+
+The frontend never uses synthetic client-side records. Authentication and clinical data are provided by the backend API and persisted through JPA.
+
+## Requirements
+
+For local development, install:
+
+- Node.js 22.13 or newer
+- pnpm 11
+- Java 21
+- Maven 3.9 or newer
+- Docker Desktop, optional but recommended for PostgreSQL
+
+Verify the installed tools:
+
+```bash
+node --version
+pnpm --version
+java --version
+mvn --version
+```
+
+## Quick Start: Local Demo
+
+The demo profile uses a file-backed H2 database and does not require Docker or PostgreSQL.
+
+### 1. Start the backend
+
+```bash
+cd backend
+mvn spring-boot:run -Dspring-boot.run.profiles=demo
+```
+
+The API starts at `http://localhost:8080`.
+
+### 2. Start the frontend
+
+In a second terminal:
 
 ```bash
 cd frontend
@@ -17,57 +105,117 @@ pnpm install
 pnpm start
 ```
 
-The Angular server listens on port 3000 and proxies `/api` requests to Spring Boot on port 8080. The UI requires the API for authentication and data; if the API is unavailable it shows the corresponding loading/error state rather than synthetic records.
+Open [http://localhost:3000](http://localhost:3000) in a browser. The frontend proxies `/api` requests to the backend at port `8080`.
 
-## Run the backend
+Check backend health at [http://localhost:8080/api/health](http://localhost:8080/api/health).
 
-With a local PostgreSQL instance or the compose service:
+## PostgreSQL Development
+
+Start PostgreSQL with Docker Compose:
 
 ```bash
 docker compose up -d postgres
+```
+
+Then start the backend using the default PostgreSQL configuration:
+
+```bash
 cd backend
 mvn spring-boot:run
 ```
 
-To run without Docker/PostgreSQL for a local empty development database:
+The backend reads these environment variables for PostgreSQL:
+
+| Variable | Default |
+| --- | --- |
+| `DB_HOST` | `localhost` |
+| `DB_PORT` | `5432` |
+| `DB_NAME` | `careconnect` |
+| `DB_USER` | `careconnect` |
+| `DB_PASSWORD` | `careconnect` |
+
+For a first deployment, set the bootstrap administrator credentials once:
+
+```bash
+set CARECONNECT_BOOTSTRAP_ADMIN_USERNAME=admin
+set CARECONNECT_BOOTSTRAP_ADMIN_PASSWORD=replace-with-a-strong-password
+```
+
+On PowerShell, use `$env:NAME = "value"` instead. The password must contain at least eight characters. The bootstrap account is not overwritten on later starts.
+
+## Docker Deployment
+
+The multi-stage Dockerfile builds the Angular application, copies the browser bundle into Spring Boot static resources, packages the backend, and serves the combined application from one process.
+
+```bash
+docker compose up --build
+```
+
+The container exposes port `3000`. Configure a PostgreSQL-capable database and production secrets through environment variables before deploying to a shared or public environment.
+
+## API Overview
+
+All API routes are served below `/api`.
+
+| Area | Endpoints |
+| --- | --- |
+| Authentication | `POST /auth/signup`, `POST /auth/login`, `GET /auth/me` |
+| Health | `GET /health` |
+| Dashboards | `GET /dashboard/{provider\|patient}` |
+| Patients | `GET /patients`, `GET /patients/{id}/chart`, `POST /patients`, `PUT /patients/{id}`, `PATCH /patients/{id}/status` |
+| Providers | `GET /providers`, `POST /providers` |
+| Encounters | `GET /encounters`, `GET /encounters/{id}`, `POST /encounters`, `PATCH /encounters/{id}/note` |
+| Orders | `GET /orders`, `POST /orders`, `PATCH /orders/{id}/status` |
+| Medications | `GET /medications`, `POST /medications`, `PATCH /medications/{id}/status` |
+| Appointments | `GET /appointments`, `POST /appointments`, `PATCH /appointments/{id}/status` |
+| Staff administration | `GET /admin/staff`, `POST /admin/staff`, `PATCH /admin/staff/{id}/status` |
+| Audit | `GET /audit` |
+
+Authorization is enforced by the backend. Staff roles are provisioned by an administrator rather than selected through public patient signup.
+
+## Testing and Build Commands
+
+### Frontend
+
+```bash
+cd frontend
+pnpm typecheck
+pnpm build
+pnpm test
+```
+
+### Backend
 
 ```bash
 cd backend
-mvn spring-boot:run -Dspring-boot.run.profiles=demo
+mvn test
 ```
 
-The backend reads `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD` for PostgreSQL. The health response is available at `GET /api/health`.
+## Project Structure
 
-The `demo` profile uses file-backed H2 under `backend/data/` so locally created accounts survive API restarts; the directory is ignored by Git. PostgreSQL is the recommended durable deployment database.
+```text
+.
+├── backend/
+│   ├── src/main/java/        Spring Boot controllers, services, models, and security
+│   ├── src/main/resources/   Configuration and Flyway migrations
+│   └── src/test/             Backend tests
+├── frontend/
+│   ├── src/app/core/         API, authentication, models, and interceptors
+│   ├── src/app/features/     Screens and clinical workflows
+│   └── src/assets/           Frontend assets
+├── docker-compose.yml         Local PostgreSQL service
+├── Dockerfile                 Production container build
+└── README.md                  Project documentation
+```
 
-## Account access
+## Security and Privacy
 
-Patients can create accounts from the sign-in screen. Signup creates a `Patient` JPA record and a linked `AppUser` with a BCrypt password hash, then returns a JWT session. Existing users sign in with the same persisted username and password. Staff roles are intentionally provisioned by an administrator rather than selected by public signup. Set `CARECONNECT_DEMO_SEED=true` only when explicitly loading development fixtures; it is disabled by default.
+- Keep secrets out of source control and use environment variables or a secret manager.
+- Use HTTPS and secure cookie/token policies in production.
+- Replace all development database credentials before deployment.
+- Review authorization, audit retention, backup, access control, and incident response requirements before handling real patient data.
+- Commission independent security, privacy, accessibility, clinical-safety, interoperability, and regulatory reviews before any real-world use.
 
-## API surface
+## License
 
-On a fresh deployment, set `CARECONNECT_BOOTSTRAP_ADMIN_USERNAME` and an 8+ character `CARECONNECT_BOOTSTRAP_ADMIN_PASSWORD` once to create the initial administrator account. It is never overwritten on later starts. Sign in as that account and use **Staff management** to provision Doctor or Nurse accounts and change their active status.
-
-| Resource | Endpoints |
-| --- | --- |
-| Auth | `POST /api/auth/signup`, `POST /api/auth/login`, `GET /api/auth/me` |
-| Health | `GET /api/health` |
-| Dashboard | `GET /api/dashboard/{provider\|patient}` |
-| Patients | `GET /api/patients?search=`, `GET /api/patients/{id}/chart`, `POST /api/patients`, `PUT /api/patients/{id}`, `PATCH /api/patients/{id}/status` |
-| Providers | `GET /api/providers`, `POST /api/providers` |
-| Encounters | `GET /api/encounters`, `GET /api/encounters/{id}`, `POST /api/encounters`, `PATCH /api/encounters/{id}/note` |
-| Orders | `GET /api/orders`, `POST /api/orders`, `PATCH /api/orders/{id}/status` with validated status/activity transitions |
-| Medications | `GET /api/medications`, `POST /api/medications` with allergy acknowledgement, `PATCH /api/medications/{id}/status` |
-| Appointments | `GET /api/appointments`, `POST /api/appointments`, `PATCH /api/appointments/{id}/status`; booking rejects overlapping provider time windows |
-| Security | BCrypt password hashes, signed JWT bearer sessions, role boundaries, `GET /api/audit` (admin) |
-| Staff administration | `GET`, `POST /api/admin/staff`, `PATCH /api/admin/staff/{id}/status` (admin only) |
-
-## Production container
-
-`Dockerfile` builds the Angular browser bundle, copies it into Spring Boot static resources, packages the backend, and serves the SPA plus `/api/*` from one same-origin process. Set `PORT=3000` for the Web Dev container contract and provide a PostgreSQL connection through environment variables. The platform's managed database capability is MySQL-compatible; this project intentionally keeps PostgreSQL as the requested canonical database, so a production deployment needs a PostgreSQL-capable connection rather than silently changing the persistence layer.
-
-Versioned frontend assets should be cached long-term, while authenticated and clinical API responses should remain private and non-cacheable. Patient-facing routes and staff operations are declared in `frontend/src/public/manus-routes.json` and emitted at `/manus-routes.json`.
-
-## Safety note
-
-This project is not a HIPAA, GDPR, SOC 2, or medical-device compliance claim. Do not enter real protected health information. Before any real clinical use, commission security, privacy, clinical safety, accessibility, disaster recovery, audit, interoperability, and regulatory review.
+No license has been declared for this repository. Add an appropriate license before distributing or reusing the project.
