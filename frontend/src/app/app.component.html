@@ -1,0 +1,45 @@
+<ng-container *ngIf="!loginRoute(); else loginOnly">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" routerLink="/" aria-label="CareConnect home">
+        <img src="assets/careconnect-mark.svg" alt="" class="brand-mark">
+        <span>Care<span>Connect</span></span>
+      </a>
+      <div class="workspace-label">{{ isPatient ? 'PATIENT PORTAL' : 'CLINICAL WORKSPACE' }}</div>
+      <nav class="nav-list" aria-label="Primary navigation">
+        <ng-container *ngIf="isProvider; else patientNav">
+          <a routerLink="/provider/dashboard" routerLinkActive="active" class="nav-item"><span class="nav-icon">⌂</span><span>Overview</span></a>
+          <a routerLink="/provider/patients" routerLinkActive="active" class="nav-item"><span class="nav-icon">♧</span><span>Patients</span><span class="nav-count">42</span></a>
+          <a routerLink="/provider/encounters" routerLinkActive="active" class="nav-item"><span class="nav-icon">▤</span><span>Encounters</span><span class="nav-count warm">6</span></a>
+          <a routerLink="/provider/orders" routerLinkActive="active" class="nav-item"><span class="nav-icon">⊞</span><span>Orders</span><span class="nav-count coral">9</span></a>
+          <a routerLink="/provider/medications" routerLinkActive="active" class="nav-item"><span class="nav-icon">✚</span><span>Medications</span></a>
+          <a routerLink="/provider/operations" routerLinkActive="active" class="nav-item"><span class="nav-icon">◫</span><span>Operations</span></a>
+          <a *ngIf="isAdmin" routerLink="/admin/staff" routerLinkActive="active" class="nav-item"><span class="nav-icon">+</span><span>Staff management</span></a>
+        </ng-container>
+        <ng-template #patientNav>
+          <a routerLink="/portal" routerLinkActive="active" class="nav-item"><span class="nav-icon">⌂</span><span>My overview</span></a>
+          <a routerLink="/portal/appointments" routerLinkActive="active" class="nav-item"><span class="nav-icon">◷</span><span>Appointments</span></a>
+          <a routerLink="/portal/medications" routerLinkActive="active" class="nav-item"><span class="nav-icon">✚</span><span>My medications</span></a>
+          <a routerLink="/portal/visits" routerLinkActive="active" class="nav-item"><span class="nav-icon">▤</span><span>Visit summaries</span></a>
+        </ng-template>
+      </nav>
+      <div class="sidebar-bottom">
+        <a routerLink="/settings" routerLinkActive="active" class="nav-item"><span class="nav-icon">⚙</span><span>Settings</span></a>
+        <div class="sidebar-help"><div class="help-icon">?</div><div><strong>Need a hand?</strong><span>Open support center</span></div><span class="arrow">→</span></div>
+      </div>
+    </aside>
+
+    <main class="main-column">
+      <header class="topbar">
+        <div class="crumbs"><span>Bayview Clinic</span><span class="crumb-separator">/</span><strong>{{ isPatient ? 'Patient portal' : 'Clinical workspace' }}</strong></div>
+        <div class="top-actions">
+          <button class="icon-button" aria-label="Search"><span>⌕</span></button>
+          <button class="icon-button notification" aria-label="Notifications"><span>♢</span><i></i></button>
+          <div class="profile-menu"><div class="avatar">{{ auth.user()?.initials || 'CC' }}</div><div class="profile-copy"><strong>{{ auth.user()?.displayName || 'CareConnect user' }}</strong><span>{{ auth.user()?.subtitle || 'Authenticated account' }}</span></div><button class="profile-caret" (click)="auth.logout()" aria-label="Sign out">↗</button></div>
+        </div>
+      </header>
+      <div class="page-content"><router-outlet /></div>
+    </main>
+  </div>
+</ng-container>
+<ng-template #loginOnly><router-outlet /></ng-template>

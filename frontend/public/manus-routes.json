@@ -1,0 +1,19 @@
+{
+  "routes": [
+    { "path": "/", "title": "CareConnect dashboard" },
+    { "path": "/login", "title": "Sign in" },
+    { "path": "/provider/dashboard", "title": "Provider dashboard" },
+    { "path": "/provider/patients", "title": "Patient records" },
+    { "path": "/provider/patients/:id", "title": "Patient chart" },
+    { "path": "/provider/encounters", "title": "Clinical encounters" },
+    { "path": "/provider/encounters/:id", "title": "Encounter documentation" },
+    { "path": "/provider/orders", "title": "CPOE orders" },
+    { "path": "/provider/medications", "title": "Medication management" },
+    { "path": "/provider/operations", "title": "Care operations" },
+    { "path": "/portal", "title": "Patient portal" },
+    { "path": "/portal/appointments", "title": "Patient appointments" },
+    { "path": "/portal/medications", "title": "Patient medications" },
+    { "path": "/portal/visits", "title": "Patient visit summaries" },
+    { "path": "/settings", "title": "Settings" }
+  ]
+}

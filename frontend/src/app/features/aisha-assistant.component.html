@@ -1,0 +1,18 @@
+<section class="aisha-card" [class.is-listening]="listening()" [style.--voice-level]="voiceLevel()">
+  <div class="aisha-orb" aria-hidden="true"><span></span><i></i><b></b></div>
+  <div class="aisha-copy">
+    <div class="aisha-kicker"><span class="aisha-status"></span> CareConnect AI</div>
+    <h2>{{ greeting }}</h2>
+    <p>{{ response() }}</p>
+    <small *ngIf="transcript()">Heard: “{{ transcript() }}”</small>
+    <div class="aisha-actions">
+      <button class="btn btn-mint btn-small" type="button" (click)="toggleListening()">{{ listening() ? 'Stop listening' : 'Talk to Aisha' }}</button>
+      <button class="aisha-link" type="button" (click)="ask('brief')">Give me a brief</button>
+    </div>
+  </div>
+  <div class="aisha-prompts" aria-label="Aisha quick prompts">
+    <button type="button" (click)="ask('appointment')">Next appointment <span>→</span></button>
+    <button type="button" (click)="ask('tasks')">Attention items <span>→</span></button>
+    <button type="button" (click)="ask('risk')">Risk watch <span>→</span></button>
+  </div>
+</section>

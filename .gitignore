@@ -1,0 +1,21 @@
+# Node / Angular
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/out-tsc/
+
+# Java / Maven
+backend/target/
+backend/data/
+
+# Local runtime
+.env
+*.log
+.DS_Store
+.idea/
+.vscode/
+.tools/
+
+# Local database data
+data/
+careconnect-postgres-data/
