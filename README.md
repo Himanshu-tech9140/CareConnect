@@ -1,28 +1,48 @@
+<div align="center">
+
+<img src="./careconnect-logo.png" alt="CareConnect logo" width="120" />
+
 # CareConnect
 
-## Patient and Provider EHR Workspace
+### Patient and Provider EHR Workspace
+
+<p>Connected care. Clear records. Better collaboration.</p>
+
+[![Angular](https://img.shields.io/badge/Angular-19-DD0031?logo=angular&logoColor=white)](https://angular.dev/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![Java](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk&logoColor=white)](https://www.java.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+
+<br />
+
+[**Open the repository**](https://github.com/Himanshu-tech9140/CareConnect) · [**Run locally**](#quick-start-local-demo) · [**View API overview**](#api-overview)
+
+</div>
+
+---
+
+## 🌟 Overview
 
 CareConnect is a full-stack electronic health record (EHR) reference application for connecting patients, providers, and care teams in one secure workspace. It provides role-aware clinical workflows for authentication, patient records, appointments, encounters, orders, medications, staff administration, and audit visibility.
 
-> **Important:** CareConnect is a demonstration and reference implementation. It is not certified for clinical use and does not make HIPAA, GDPR, SOC 2, medical-device, or other regulatory compliance claims. Never enter real protected health information (PHI).
+> [!IMPORTANT]
+> CareConnect is a demonstration and reference implementation. It is not certified for clinical use and does not make HIPAA, GDPR, SOC 2, medical-device, or other regulatory compliance claims. Never enter real protected health information (PHI).
 
-## Highlights
+## ✨ Highlights
 
-- Role-based workspaces for administrators, doctors, nurses, and patients
-- Patient registration and authenticated sign-in with JWT sessions
-- BCrypt password hashing and server-side authorization boundaries
-- Patient profiles, charts, encounters, medications, and clinical orders
-- Appointment scheduling with provider availability and overlap validation
-- Staff provisioning and account status management for administrators
-- Audit event tracking for security-sensitive operations
-- Angular responsive UI with a Spring Boot REST API
-- PostgreSQL-ready persistence with Flyway migrations
-- File-backed H2 demo profile for local development without Docker
-- Docker support for a single-container deployment
+| | Capability | Description |
+|---|---|---|
+| 🔐 | **Secure access** | JWT sessions, BCrypt password hashing, and role-based authorization |
+| 🩺 | **Clinical workspace** | Patient profiles, charts, encounters, medications, and orders |
+| 📅 | **Care coordination** | Appointment scheduling with provider availability validation |
+| 👥 | **Staff administration** | Admin-controlled staff provisioning and account status management |
+| 🧾 | **Audit visibility** | Audit events for security-sensitive operations |
+| 🚀 | **Deployment ready** | PostgreSQL persistence, Flyway migrations, and Docker support |
 
-## Technology Stack
+## 🧰 Technology Stack
 
-### Frontend
+### 🎨 Frontend
 
 - Angular 19
 - TypeScript with strict compiler settings
@@ -30,7 +50,7 @@ CareConnect is a full-stack electronic health record (EHR) reference application
 - Reactive forms and RxJS
 - Angular development server with `/api` proxying
 
-### Backend
+### ⚙️ Backend
 
 - Java 21
 - Spring Boot 3.4
@@ -39,14 +59,14 @@ CareConnect is a full-stack electronic health record (EHR) reference application
 - BCrypt password hashing
 - Flyway database migrations
 
-### Data and Delivery
+### 🗄️ Data and Delivery
 
 - PostgreSQL 16 for the canonical runtime
 - H2 for the local `demo` profile
 - Docker Compose for PostgreSQL development
 - Multi-stage Dockerfile for combined frontend and backend packaging
 
-## Architecture
+## 🏗️ Architecture
 
 ```text
 Browser
@@ -63,7 +83,7 @@ PostgreSQL 16  |  H2 demo database
 
 The frontend never uses synthetic client-side records. Authentication and clinical data are provided by the backend API and persisted through JPA.
 
-## Requirements
+## ✅ Requirements
 
 For local development, install:
 
@@ -82,7 +102,7 @@ java --version
 mvn --version
 ```
 
-## Quick Start: Local Demo
+## 🚀 Quick Start: Local Demo
 
 The demo profile uses a file-backed H2 database and does not require Docker or PostgreSQL.
 
@@ -109,7 +129,7 @@ Open [http://localhost:3000](http://localhost:3000) in a browser. The frontend p
 
 Check backend health at [http://localhost:8080/api/health](http://localhost:8080/api/health).
 
-## PostgreSQL Development
+## 🐘 PostgreSQL Development
 
 Start PostgreSQL with Docker Compose:
 
@@ -143,7 +163,7 @@ set CARECONNECT_BOOTSTRAP_ADMIN_PASSWORD=replace-with-a-strong-password
 
 On PowerShell, use `$env:NAME = "value"` instead. The password must contain at least eight characters. The bootstrap account is not overwritten on later starts.
 
-## Docker Deployment
+## 🐳 Docker Deployment
 
 The multi-stage Dockerfile builds the Angular application, copies the browser bundle into Spring Boot static resources, packages the backend, and serves the combined application from one process.
 
@@ -153,7 +173,7 @@ docker compose up --build
 
 The container exposes port `3000`. Configure a PostgreSQL-capable database and production secrets through environment variables before deploying to a shared or public environment.
 
-## API Overview
+## 🔌 API Overview
 
 All API routes are served below `/api`.
 
@@ -173,7 +193,7 @@ All API routes are served below `/api`.
 
 Authorization is enforced by the backend. Staff roles are provisioned by an administrator rather than selected through public patient signup.
 
-## Testing and Build Commands
+## 🧪 Testing and Build Commands
 
 ### Frontend
 
@@ -191,7 +211,7 @@ cd backend
 mvn test
 ```
 
-## Project Structure
+## 📁 Project Structure
 
 ```text
 .
@@ -208,7 +228,7 @@ mvn test
 └── README.md                  Project documentation
 ```
 
-## Security and Privacy
+## 🛡️ Security and Privacy
 
 - Keep secrets out of source control and use environment variables or a secret manager.
 - Use HTTPS and secure cookie/token policies in production.
@@ -216,6 +236,6 @@ mvn test
 - Review authorization, audit retention, backup, access control, and incident response requirements before handling real patient data.
 - Commission independent security, privacy, accessibility, clinical-safety, interoperability, and regulatory reviews before any real-world use.
 
-## License
+## 📄 License
 
 No license has been declared for this repository. Add an appropriate license before distributing or reusing the project.
