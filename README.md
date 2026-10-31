@@ -10,7 +10,7 @@
 
 [![Angular](https://img.shields.io/badge/Angular-19-DD0031?logo=angular&logoColor=white)](https://angular.dev/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
-[![Java](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk&logoColor=white)](https://www.java.com/)
+[![Java Backend](https://img.shields.io/badge/Backend-Java%2021%20%2B%20Spring%20Boot-ED8B00?logo=openjdk&logoColor=white)](https://spring.io/projects/spring-boot)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 
@@ -42,6 +42,9 @@ CareConnect is a full-stack electronic health record (EHR) reference application
 
 ## 🧰 Technology Stack
 
+> [!NOTE]
+> **Backend clarification:** CareConnect uses **Java 21 with Spring Boot 3.4** for its backend REST API. It does **not** use Node.js for the backend. Node.js and pnpm are only used to build and run the Angular frontend.
+
 ### 🎨 Frontend
 
 - Angular 19
@@ -52,8 +55,7 @@ CareConnect is a full-stack electronic health record (EHR) reference application
 
 ### ⚙️ Backend
 
-- Java 21
-- Spring Boot 3.4
+- **Java 21 + Spring Boot 3.4**
 - Spring Web, Spring Security, Spring Data JPA, and Bean Validation
 - JWT bearer authentication
 - BCrypt password hashing
@@ -75,7 +77,7 @@ Browser
 Angular 19 frontend (:3000)
   |  /api proxy in development
   v
-Spring Boot REST API (:8080)
+Java 21 + Spring Boot REST API (:8080)
   |
   v
 PostgreSQL 16  |  H2 demo database
